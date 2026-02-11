@@ -19,6 +19,6 @@ jobs:
           script: |
             cd ${{ secrets.VM_PATH }}
             git pull origin main
-            docker compose down
+            docker compose down --remove-orphans
             docker compose build
             docker compose up -d

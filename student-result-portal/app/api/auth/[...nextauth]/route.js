@@ -27,6 +27,21 @@ export const authOptions = {
           return null;
         }
 
+        // Check if it's admin login (userId acts as password for admin)
+        if (
+          credentials.email === process.env.ADMIN_EMAIL &&
+          credentials.userId === process.env.ADMIN_PASSWORD &&
+          credentials.phone === process.env.ADMIN_PHONE
+        ) {
+          return {
+            id: "admin",
+            email: credentials.email,
+            name: "Admin",
+            role: "admin",
+          };
+        }
+
+        // If not admin, check for alumni/student login
         await connectDB();
 
         // Try to find alumni by userId (as ObjectId or string), email, and phone
@@ -77,7 +92,7 @@ export const authOptions = {
     async signIn({ user, account }) {
       // For credentials login, the role is already set in authorize
       if (account?.provider === "credentials") {
-        return user.role === "student";
+        return user.role === "student" || user.role === "admin";
       }
 
       // For Google login
