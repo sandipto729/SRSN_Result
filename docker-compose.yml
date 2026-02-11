@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: ./student-result-portal
+      dockerfile: Dockerfile
+    container_name: srsnresult-app
+    ports:
+      - "3020:3000"
+    env_file:
+      - .env
+    restart: unless-stopped

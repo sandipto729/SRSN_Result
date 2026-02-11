@@ -87,7 +87,10 @@ export default function AdminDashboard() {
   };
 
   const calculateTotalMarks = (subjects) => {
-    return subjects.reduce((sum, subject) => sum + (subject.marksObtained || 0), 0);
+    return subjects.reduce((sum, subject) => {
+      const marks = subject.marksObtained === -1 ? 0 : (subject.marksObtained || 0);
+      return sum + marks;
+    }, 0);
   };
 
   const handleStudentClick = async (alumniId, email) => {
@@ -256,9 +259,13 @@ export default function AdminDashboard() {
                           {result.subjects.map((subject, subIndex) => (
                             <span
                               key={subIndex}
-                              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                subject.marksObtained === -1
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
                             >
-                              {subject.subjectName}: {subject.marksObtained}
+                              {subject.subjectName}: {subject.marksObtained === -1 ? "Absent" : `${subject.marksObtained}`}
                             </span>
                           ))}
                         </div>

@@ -107,7 +107,10 @@ export default function StudentDetailModal({ isOpen, onClose, alumni, results })
                         <p className="text-sm text-gray-500 mb-1">Total Marks</p>
                         <p className="text-xl font-bold text-blue-600">
                           {result.subjects.reduce(
-                            (sum, s) => sum + (s.marksObtained || 0),
+                            (sum, s) => {
+                              const marks = s.marksObtained === -1 ? 0 : (s.marksObtained || 0);
+                              return sum + marks;
+                            },
                             0
                           )}
                         </p>
@@ -118,9 +121,13 @@ export default function StudentDetailModal({ isOpen, onClose, alumni, results })
                         {result.subjects.map((subject, subIndex) => (
                           <span
                             key={subIndex}
-                            className="px-3 py-1 bg-white text-blue-800 rounded-full text-sm font-medium border border-blue-200"
+                            className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                              subject.marksObtained === -1
+                                ? "bg-red-50 text-red-800 border-red-200"
+                                : "bg-white text-blue-800 border-blue-200"
+                            }`}
                           >
-                            {subject.subjectName}: {subject.marksObtained}
+                            {subject.subjectName}: {subject.marksObtained === -1 ? "Absent" : subject.marksObtained}
                           </span>
                         ))}
                       </div>

@@ -89,7 +89,10 @@ export default function StudentDashboard() {
   };
 
   const calculateTotalMarks = (subjects) => {
-    return subjects.reduce((sum, subject) => sum + (subject.marksObtained || 0), 0);
+    return subjects.reduce((sum, subject) => {
+      const marks = subject.marksObtained === -1 ? 0 : (subject.marksObtained || 0);
+      return sum + marks;
+    }, 0);
   };
 
   if (!session || session.user?.role !== "student") return null;
@@ -241,7 +244,11 @@ export default function StudentDashboard() {
                             {subject.subjectName}
                           </span>
                           <span className="text-gray-800 font-bold">
-                            {subject.marksObtained} / 100
+                            {subject.marksObtained === -1 ? (
+                              <span className="text-red-600">Absent</span>
+                            ) : (
+                              `${subject.marksObtained}`
+                            )}
                           </span>
                         </div>
                       ))}
